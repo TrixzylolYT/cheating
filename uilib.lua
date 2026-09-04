@@ -201,3 +201,5 @@ function ModernUI:CreateWindow(titleText)
 
     return WindowObj
 end
+
+return ModernUI
