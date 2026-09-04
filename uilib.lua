@@ -318,20 +318,28 @@ function ModernUI:CreateWindow(titleText)
                 end
             end)
 
-            -- Optional click on the entire frame
+            local GuiService = game:GetService("GuiService")
             ToggleFrame.InputBegan:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    if input.Target ~= ToggleBtn then
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    local objects = GuiService:GetGuiObjectsAtPosition(input.Position.X, input.Position.Y)
+                    local clickedOnToggle = false
+                    for _, obj in ipairs(objects) do
+                        if obj == ToggleBtn or obj:IsDescendantOf(ToggleBtn) then
+                            clickedOnToggle = true
+                            break
+                        end
+                    end
+                    
+                    if not clickedOnToggle then
                         state = not state
                         updateToggle()
-
+    
                         if callback then
                             callback(state)
                         end
                     end
                 end
             end)
-
             return {
                 Set = function(_, newState)
                     state = newState == true
